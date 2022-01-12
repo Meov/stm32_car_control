@@ -27,6 +27,9 @@ unsigned int timeslice_get_task_timeslice_len(TimesilceTaskObj* obj);
 unsigned int timeslice_get_task_num(void);
 unsigned char timeslice_task_isexist(TimesilceTaskObj* obj);
 
-#endif
+//针对STM32F103时间片轮询架构
+void timeslice_tick_init(void);
+void timeslice_execing(void);
 
+#endif
 

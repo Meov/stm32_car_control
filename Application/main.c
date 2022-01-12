@@ -20,31 +20,61 @@
 #include "key.h"
 #include "exti.h"
 #include "can.h" 
+#include "hear_beat.h"
 u16 t=0;
 u8 i=0;
 u8 cnt=0;
 u8 canbuf[8];
 u8 res;
 
+//#ifdef TEST
 
-int init(void){
+#include "test.h"
+
+//#endif
+
+
+
+
+void timeslice_init(void){
+	timeslice_tick_init();  //时间片轮询初始化
+}
+
+void system_running(void){
+	timeslice_execing();    //时间片开始调度
+}
+
+int hardware_init(void){
 	int ret = 0;
 	delay_init();
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 	uart_init(115200);
  	LED_Init();	
 	KEY_Init();//IO初始化
-	//EXTIX_Init();		 	//外部中断初始化
+	EXTIX_Init();		 	//外部中断初始化
 	CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_9tq,4,CAN_Mode_Normal);   
 	
 	return ERR_SUUCEED;
 }
 
+
+int main(int argc, char* argv[]){
+	
+	hardware_init();
+	timeslice_init();
+	hear_beat();
+	
+	system_running(); //while 1
+}
+
+
+/*
+
 int main(void)
 {	
 	vu8 key=0;
 	init();
-	
+	test();
 	
  	while(1)
 	{
@@ -93,3 +123,4 @@ int main(void)
 	
  }
 
+*/
